@@ -1,16 +1,16 @@
 planb
 =====
 
-setup
-LAMP stack
-Setup guide:
-Download .sql files 
-Create a database and execute the SQL
+setup<br>
+LAMP stack<br>
+Setup guide:<br>
+Download .sql files<br> 
+Create a database and execute the SQL<br>
 Create a new MySQL  user and set permissions
-Copy device.php to your directory (this is the page that you are going to point the browser)
-Edit db.php (replace **** with user info ***)
-Set up API for your hosted wallet (sign up on blockchain.info)
-Insert API keys into send.php (edit send.php)
-navigate to brower
-navigate to control
-send a test dollar
+Copy device.php to your directory (this is the page that you are going to point the browser)<br>
+Edit db.php (replace **** with user info )<br>
+Set up API for your hosted wallet (sign up on blockchain.info)<br>
+Insert API keys into send.php (edit send.php)<br>
+navigate to brower<br>
+navigate to control<br>
+send a test dollar<br>
