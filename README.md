@@ -12,5 +12,5 @@ Edit db.php (replace **** with user info )<br>
 Set up API for your hosted wallet (sign up on blockchain.info)<br>
 Insert API keys into send.php (edit send.php)<br>
 navigate to browser<br>
-navigate to control panel this needs to be in an admin panel. (outside scope of this build, I recomend just using phpmyadmin if you dont know how to do this)<br>
+navigate to control panel this needs to be in an admin section of a webservice. (outside scope of this build, I recomend just using phpmyadmin if you dont know how to do this)<br>
 send a test dollar<br>
