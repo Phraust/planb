@@ -26,8 +26,24 @@ if (!isset($BTCpaid)){ echo 'EMPTY BTC PAID ERROR****';}
 if (!isset($total)){ echo 'EMPTY $total ERROR****';}
 if (!isset($sestotal)){ echo 'EMPTY sestotal ERROR****';}
 if ($sestotal < 0 ){ echo 'NEGIVITE sestotal ERROR****';}
-/*/
+/*/Blockchain.info
 $data = json_decode(file_get_contents("http://blockchain.info/ticker"),true); $entry = round($data['USD']['last'], 2);
+/*/MTgox
+//gox
+$c = curl_init();
+curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($c, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-Type: application/json'));
+curl_setopt($c, CURLOPT_URL, 'http://data.mtgox.com/api/2/BTCUSD/money/ticker');
+
+$data = curl_exec($c);
+curl_close($c);
+
+$obj = json_decode($data);
+
+$last = print_r($obj->{'data'}->{'last'}->{'display_short'}."\n", true);
+$entry = filter_var($last, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+//echo $entry;
+/*/
 $query = "INSERT INTO price SET price = ?";$stmt = $con->prepare($query); $stmt->bindParam(1, $entry);$stmt->execute();
 $sql = "SELECT * FROM price ORDER BY id DESC LIMIT 1"; $result = $link->query($sql); if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$lastprice = $row['price'];}}
 //
