@@ -12,12 +12,13 @@ include ('db.php');
 $sql = "SELECT * FROM address ORDER BY id DESC LIMIT 1"; $result = $link->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$address = $row['address'];}}
 
 $sql = $query = "SELECT SUM(b1) FROM bills"; $result = $sqlicon->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$sum1 = $row['SUM(b1)'];}}
-$sql = $query = "SELECT SUM(b5) FROM bills"; $result = $sqlicon->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$sum5 = $row['SUM(b5)'];}}
-$sql = $query = "SELECT SUM(b10) FROM bills"; $result = $sqlicon->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$sum10 = $row['SUM(b10)'];}}
-$sql = $query = "SELECT SUM(b20) FROM bills"; $result = $sqlicon->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$sum20 = $row['SUM(b20)'];}}
-$sql = $query = "SELECT SUM(b50) FROM bills"; $result = $sqlicon->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$sum50 = $row['SUM(b50)'];}}
-$sql = $query = "SELECT SUM(b100) FROM bills"; $result = $sqlicon->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$sum100 = $row['SUM(b100)'];}}
-$total = ($sum1 *1) + ($sum5 * 5) + ($sum10 * 10) + ($sum20 * 20) + ($sum50 *50) + ($sum100 * 100);
+$sql = $query = "SELECT SUM(b2) FROM bills"; $result = $sqlicon->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$sum2 = $row['SUM(b2)'];}}
+$sql = $query = "SELECT SUM(b3) FROM bills"; $result = $sqlicon->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$sum5 = $row['SUM(b3)'];}}
+$sql = $query = "SELECT SUM(b4) FROM bills"; $result = $sqlicon->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$sum10 = $row['SUM(b4)'];}}
+$sql = $query = "SELECT SUM(b5) FROM bills"; $result = $sqlicon->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$sum20 = $row['SUM(b5)'];}}
+$sql = $query = "SELECT SUM(b6) FROM bills"; $result = $sqlicon->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$sum50 = $row['SUM(b6)'];}}
+$sql = $query = "SELECT SUM(b7) FROM bills"; $result = $sqlicon->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$sum100 = $row['SUM(b7)'];}}
+$total = ($sum1 *1) + ($sum5 * 5) + ($sum2 * 2) + ($sum10 * 10) + ($sum20 * 20) + ($sum50 *50) + ($sum100 * 100);
 $sql = $query = "SELECT SUM(usd) FROM btcout";$result = $sqlicon->query($sql); if ($result->num_rows > 0) { while($row = $result->fetch_assoc()) {$BTCpaid = $row['SUM(usd)'];}}
 $sestotal = $total - $BTCpaid;
 /*/errors
