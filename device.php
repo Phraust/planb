@@ -26,9 +26,9 @@ if (!isset($BTCpaid)){ echo 'EMPTY BTC PAID ERROR****';}
 if (!isset($total)){ echo 'EMPTY $total ERROR****';}
 if (!isset($sestotal)){ echo 'EMPTY sestotal ERROR****';}
 if ($sestotal < 0 ){ echo 'NEGIVITE sestotal ERROR****';}
-/*/Blockchain.info
-$data = json_decode(file_get_contents("http://blockchain.info/ticker"),true); $entry = round($data['USD']['last'], 2);
-/*/MTgox
+/*/
+//$data = json_decode(file_get_contents("http://blockchain.info/ticker"),true); $entry = round($data['USD']['last'], 2);
+
 //gox
 $c = curl_init();
 curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
@@ -43,7 +43,7 @@ $obj = json_decode($data);
 $last = print_r($obj->{'data'}->{'last'}->{'display_short'}."\n", true);
 $entry = filter_var($last, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 //echo $entry;
-/*/
+
 $query = "INSERT INTO price SET price = ?";$stmt = $con->prepare($query); $stmt->bindParam(1, $entry);$stmt->execute();
 $sql = "SELECT * FROM price ORDER BY id DESC LIMIT 1"; $result = $link->query($sql); if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$lastprice = $row['price'];}}
 //
@@ -63,25 +63,22 @@ if ($count == 4) {$time = '15';}
 if ($count == 5) {$time = '10';}
 if ($count == 6) {$time = '5';}
 ///
-
+$txout =  $sestotal / $lastprice;
+$satoshi = $txout * 100000000 ; 
+$amount = round($satoshi, 3);
+$sql = "SELECT * FROM address ORDER BY id DESC LIMIT 1"; $result = $link->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$address = $row['address'];}}
+$sql = "SELECT * FROM recipts ORDER BY id DESC LIMIT 1"; $result = $link->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$recipt = $row['raw'];}}
 //if ($count == 2) {
 if ($count == 7) {
 
 //***********
-$txout =  $sestotal / $lastprice;
-$satatshi = $txout * 100000000 ; 
-$amount = round($satatshi);
-//Blockchain.info API
-//****************Setup*************
-$guid="";
-$main_password="";
-$second_password="";
-//****************Setup*************
+include ('BETA00001DB.php');
+
 
 $ch = curl_init ("https://blockchain.info/merchant/$guid/payment?password=$main_password&second_password=$second_password&to=$address&amount=$amount");
 curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
 $nrecipt = curl_exec ($ch);
-//END Blockchain.info API
+
 $query = "INSERT INTO recipts SET raw = ?"; $stmt = $con->prepare($query); $stmt->bindParam(1, $nrecipt);$stmt->execute();
 $sql = "SELECT * FROM address ORDER BY id DESC LIMIT 1"; $result = $link->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$address = $row['address'];}}
 if (empty($address)) {$address = 'empty error';}
@@ -94,13 +91,11 @@ $stmt->execute();
 $query = "INSERT INTO btcout SET usd = ?"; $stmt = $con->prepare($query); $stmt->bindParam(1, $sestotal);$stmt->execute();
 $reset = '0';
 $query = "INSERT INTO timer SET count = ?"; $stmt = $con->prepare($query); $stmt->bindParam(1, $reset);$stmt->execute();
-
 //*******
-  }
+	}
 //******
 
-$sql = "SELECT * FROM address ORDER BY id DESC LIMIT 1"; $result = $link->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$address = $row['address'];}}
-$sql = "SELECT * FROM recipts ORDER BY id DESC LIMIT 1"; $result = $link->query($sql);if ($result->num_rows > 0) {while($row = $result->fetch_assoc()) {$recipt = $row['raw'];}}
+
 /*/debug
 echo 'last ptice: '.$lastprice.'<P>';
 if (!isset ($error)) {echo 'no error'.'<P>';} else {echo 'error: '.$error.'<P>';};
@@ -110,84 +105,108 @@ echo '<P>'.'Count: '.$count.'<P>';
 echo 'timer: '.$time.'<P>';
 echo 'recipts: '.$recipt.'<P>';
 echo 'Total in device: '.$total.'<P>';
+echo 'satoshi: '.$satoshi.'<P>';
+echo 'Txout: '.$txout.'<P>';
+echo 'Address: '.$address.'<P>';
+echo 'Amount: '.$satoshi.'<P>';
 /*/
 
 //GUI settings
 
 ?>
-<!--        START GUI ATM                                      -->
+	
 
-<?php
-//
-$bordercolor = '#FC0';
+	
 
-$style = 'classic bordered';
-// if style = 'classic bordered'
-if ($style == 'classic bordered') {
-?>
-
-<style>
-  body {
-    margin:9px 9px 0 9px;
-    padding:0;
-    background:#FFF;}
-  #level0 {
-    background:<?php echo $bordercolor; ?>;}
-  #level1 {
-    margin-left:143px;
-    padding-left:9px;
-    background:#FFF;}
-  #level2 {
-    background:<?php echo $bordercolor; ?>;}
-  #level3 {
-    margin-right:143px;
-    padding-right:9px;
-    background:#FFF;}
-  #main {
-    background:#FFF;}
-</style>
-
-
-<body>
-  <div id="level0">
-    <div id="level1">
-      <div id="level2">
-        <div id="level3">
-          <div id="main">
-         
-<?php } ?>    
-
- <h1>Conversion rate: 1 (BTC) = $<?php echo $lastprice; ?>USD </h1>
-<br /> 
-
-<h1><?php echo $nrecipt; ?> </h1>
-<br />
-<?php echo 'timer: '.$time.'<P>' ?>
-<br /> 
-<?php echo $sestotal; ?>  session total USD to be sent
-<br />
-<?php echo $total; ?>   Total USD in device
-<br />
-<?php echo $BTCpaid; ?>   Total BTC paid out by device (in USD)
-<br />
-<h1 align="center">The Bitcoin ATM</h1>
-<div align="center">Model #: <?php echo $model; ?>
-  
-  </br>Cash tenderd</p>
-</div>
-<p align="center"><span class="add-on">$</span>
-  <input class="span1" id="appendedPrependedInput" value="<?php echo $sestotal; ?>" type="text">
-  </span>
-  <span class="add-on">.00</span>
-<p align="center">
-  <?php echo $txout; ?>
-  per bitcoin
-  <?php echo $lastprice; ?> USD = <?php $txout ?> BTC
-<p align="center">Address to Withdrawl To <?php echo $address; ?>
-  </h2>
-<h3>last Recipt</h3>
-<?php echo $recipt; ?>
-      
-      
-      </div></div></div></div></div></body>
-  <!--        END GUI ATM                                      -->
+    <!-- BEGIN GUI -->
+     
+    <!doctype html>
+    <html>
+     
+    <head>
+    <title>BitcoinATM</title>
+    <link rel="stylesheet" type="text/css" href="https://www.phraust.com/BitcoinATM/style.css">
+    </head>
+     
+    <body>
+     
+    <table width="100%" height="100%" cellspacing="0" border="0">
+    <tr>
+            <td colspan="3">
+            <span class="white big-text high-shadow" data-text="TRASH YOUR OLD FIAT!">TRASH YOUR OLD FIAT!</span>
+            <br>
+            <span class="white small-text low-shadow" data-text="TIMER: <?php echo $time; ?>">TIMER: <?php echo $time; ?></span>
+            </td>
+    </tr>
+    <tr>
+            <td>
+            <span class="white medium-text low-shadow" data-text="USD AMOUNT">USD AMOUNT</span>
+            <br>
+            <span class="green big-text high-shadow" data-text="$<?php echo $sestotal; ?>">$<?php echo round ($sestotal, 3); ?></span>
+            </td>
+     
+            <td width="350">
+            <img src="https://www.phraust.com/BitcoinATM/BitcoinATM.png">
+            </td>
+           
+            <td>
+            <span class="white medium-text low-shadow" data-text="BTC AMOUNT">BTC AMOUNT</span>
+            <br>
+            <span class="brown big-text high-shadow" data-text="B<?php echo $txout; ?>">B<?php echo round ($txout, 2); ?></span>
+            </td>
+    </tr>
+    <tr>
+            <td colspan="3">
+                    <span class="white medium-text low-shadow" data-text="RECEIVING ADDRESS">Receiving Address</span>
+                    <br>
+                    <span class="brown small-text low-shadow" data-text="<?php echo $address; ?>"><?php echo $address; ?></span>
+            </td>
+    </tr>
+    <tr>
+            <td colspan="3">
+                    <span class="tx gox white medium-text low-shadow" data-text="BITCOIN SENT!">Bitcoin Sent!</span><br>
+                    <span class="tx white medium-text low-shadow" data-text="TXID: <?php echo $recipt[2]; ?>">TXID: <?php echo $recipt[2]; ?></span>
+            </td>
+    </tr>
+    <tr height="10%">
+            <td colspan="2" class="footer left">
+            <span class="white small-text low-shadow" data-text="1 BITCOIN =">1 Bitcoin =</span> <span class="green small-text low-shadow gox" data-text="$<?php echo $lastprice; ?>">$<?php echo $lastprice; ?></span>
+            </td>
+     
+            <td colspan="2" class="footer right">
+            <span class="white small-text low-shadow" data-text="PRICING BY">Pricing by</span> <span class="white small-text low-shadow gox" data-text="MT.GOX">Mt.Gox</span>
+            </td>
+    </tr>
+    </table>
+     
+    <div id="debug">
+    <p>
+    Model:<br>
+    <?php echo $model; ?>
+    </p>
+     
+    <p>
+    Session Total USD to be sent:<br>
+    <?php echo round ($sestotal, 3); ?>
+    </p>
+     
+    <p>
+    Total USD in device:<br>
+    <?php echo round ($total,2); ?>
+    </p>
+     
+    <p>
+    Total BTC paid out by device (in USD):<br>
+    <?php echo $BTCpaid; ?>
+    </p>
+     
+    <p>
+    Last Receipt:<br>
+    <?php echo $nrecipt; ?>
+    </p>
+    </div>
+     
+    </body>
+    </html>
+     
+    <!-- END GUI -->
