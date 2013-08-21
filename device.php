@@ -112,7 +112,6 @@ echo 'Amount: '.$satoshi.'<P>';
 /*/
 
 //GUI settings
-
 ?>
 	
 
@@ -142,7 +141,7 @@ echo 'Amount: '.$satoshi.'<P>';
             <td>
             <span class="white medium-text low-shadow" data-text="USD AMOUNT">USD AMOUNT</span>
             <br>
-            <span class="green big-text high-shadow" data-text="$<?php echo $sestotal; ?>">$<?php echo round ($sestotal, 3); ?></span>
+            <span class="green big-text high-shadow" data-text="$<?php echo $sestotal; ?>">$<?php echo round($sestotal, 3); ?></span>
             </td>
      
             <td width="350">
@@ -152,7 +151,7 @@ echo 'Amount: '.$satoshi.'<P>';
             <td>
             <span class="white medium-text low-shadow" data-text="BTC AMOUNT">BTC AMOUNT</span>
             <br>
-            <span class="brown big-text high-shadow" data-text="B<?php echo $txout; ?>">B<?php echo round ($txout, 2); ?></span>
+            <span class="brown big-text high-shadow" data-text="B<?php echo $txout; ?>">B<?php echo round($txout, 2); ?></span>
             </td>
     </tr>
     <tr>
@@ -187,12 +186,12 @@ echo 'Amount: '.$satoshi.'<P>';
      
     <p>
     Session Total USD to be sent:<br>
-    <?php echo round ($sestotal, 3); ?>
+    <?php echo $sestotal; ?>
     </p>
      
     <p>
     Total USD in device:<br>
-    <?php echo round ($total,2); ?>
+    <?php echo $total; ?>
     </p>
      
     <p>
